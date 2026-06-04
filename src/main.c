@@ -2,6 +2,7 @@
 
 int main(int argc, char **argv)
 {
+    /* Add atf, alloc to free */
     int status;
     nucfSystemInfo sysInfo;
 
