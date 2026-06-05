@@ -1,7 +1,7 @@
-#include "nucleofile.h"
+#include "subchemica.h"
 
 #include "math.h"
-#include "outFiles.h"
+#include "export.h"
 #include "tui.h"
 
 #include <stdio.h>
@@ -82,10 +82,10 @@ static int nucf_run_analysis(nucfDataset data)
         nucf_export();
     }
 
-    status = fit();
-    if (status) {
-        return 3;
-    }
+    // status = fit();
+    // if (status) {
+    //     return 3;
+    // }
 
     return 0;
 }

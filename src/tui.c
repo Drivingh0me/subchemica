@@ -33,7 +33,7 @@ static int same_word(char* sample, char *key)
 int interpreter_parse(char* buffer)
 {
     /* needs to be easy to add calls and still be fast */
-    while *buffer != '\n' {}
+    /* while *buffer != '\n' {}; */
 
     return 0;
 }
@@ -77,7 +77,9 @@ void run_tui(Toolset tools)
         /* ITERATED CASES */
         /* Operator and tool calls */
         waste = interpreter_parse(buffer);
-        if (waste) {throw_err(waste)}
+        if (waste) {
+            throw_err(waste);
+        }
 
         if (same_word(buffer, "func1\n")) {
             waste = tools.func[COALESCE](1);
