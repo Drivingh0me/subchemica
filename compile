@@ -2,4 +2,8 @@
 
 # Compile everything without making object files first, 
 # because that breaks gsl for som eunknown reason.
-gcc -Os src/main.c src/math.c src/tui.c src/export.c src/subchemica.c src/interpreter.c src/render.c platform/macos/macos.c -o bin/subchemica -Wall -Wextra -lgsl -Iinclude -I/usr/local/include -L/usr/local/lib -fstack-usage
+mkdir build
+gcc -Os src/main.c src/math.c src/tui.c src/export.c src/subchemica.c\
+ src/interpreter.c src/render.c platform/macos/macos.c -o build/subchemica\
+ -Wall -Wextra -lgsl -Iinclude -I/usr/local/include -L/usr/local/lib\
+ -fstack-usage
