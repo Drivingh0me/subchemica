@@ -58,5 +58,4 @@ dkms.conf
 .DS_Store
 
 # Compiled binaries
-build/*
-!build/build.md
+build
