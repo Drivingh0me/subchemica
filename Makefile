@@ -1,42 +1,46 @@
-CC = gcc
+# Add help
 
-TARGET = subchemica
-
-SRC_DIR = src
-BUILD_DIR = build
+PROJECT := subchemica
+INCLUDE_DIR := include
 BIN_DIR = bin
-INCLUDE_DIR = include
+# LIB_DIR := lib
+SRC_DIR := src
+BUILD_DIR := build
+PLATFORM_DIR := platform/macos
 
-# This selects the paltform
-ifeq ($(shell uname -s),Darwin)
-	PLATFORM := macos
-endif
+STACK_USAGE := -fstack-usage
 
-ifeq ($(shell uname -s),Linux)
-	PLATFORM := linux
-endif
+CC = gcc
+CFLAGS = -Wall -g -I$(INCLUDE_DIR)
+# LDFLAGS := -L$(LIB_DIR)
 
-SRCS = $(wildcard $(SRC_DIR)/*.c platform/$(PLATFORM)/*.c)
+# all: $(BUILD_DIR)/$(PROJECT)
 
-OBJS = $(SRCS:.c=.o)
+SRCS := $(wildcard $(SRC_DIR)/*.c $(PLATFORM_DIR)/*.c)
 
-CFLAGS = -Wall -Wextra -I$(INCLUDE_DIR) -O2
-LDFLAGS =
+# print-srcs:
+# 	@echo $(SRCS)
 
-all: $(BIN_DIR)/$(TARGET)
+OBJS := $(patsubst $(SRC_DIR)/%.c $(PLAFORM_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+# print-objs:
+# 	@echo $(OBJS)
 
-$(BIN_DIR)/$(TARGET): $(OBJS)
+all: $(BUILD_DIR)/$(PROJECT)
+
+$(BUILD_DIR)/$(PROJECT): $(OBJS)
 	mkdir -p $(BIN_DIR)
-	$(CC) $(OBJS) -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@ $^
 
-%.o: %.c
+# $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o: $(SRCS)
+	mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-debug: CFLAGS = -Wall -Wextra -I$(INCLUDE_DIR) -g -O0
-debug: clean $(TARGET)
-
 clean:
+	rm -rf $(BUILD_DIR)
 	rm -rf $(BIN_DIR)
-	rm -f $(OBJS) $(TARGET)
 
-.PHONY: all clean debug
+exec: $(BUILD_DIR)/$(PROJECT_NAME)
+	./$(BUILD_DIR)/$(PROJECT_NAME)
+
+.PHONY: all clean exec
