@@ -13,6 +13,9 @@ void TARG_get_term_size(int *rows, int *cols)
     }
 }
 
+/* Replace with reading proc/meminfo for MemAvailable and CommitLimit
+ * to etermine how "hard" the app runs with sysInfo.
+ */
 int TARG_mem_limit(int *memory)
 {
     struct rlimit limit;
