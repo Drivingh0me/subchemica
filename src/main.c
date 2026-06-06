@@ -1,26 +1,22 @@
-#include "subchemica.h"
+#include "app.h"
 
 int main(int argc, char **argv)
 {
-    /* Add atf, alloc to free */
+    /* Add atf, alloc to free to nucf_err pass*/
     int status;
-    nucfSystemInfo sysInfo;
+    SystemInfo sysInfo;
 
-    status = nucf_startup(&sysInfo);
+    status = app_startup(&sysInfo);
     if (status) {
-        /* Last point to apeal error. Return as fatal */
-        nucf_err(status);
+        app_err(status);
     }
 
-    status = nucf_run_app(argc, argv, sysInfo);
+    status = run_app(argc, argv, &sysInfo);
     if (status) {
-        nucf_err(status);
+        app_err(status);
     }
 
-    status = nucf_shutdown(&sysInfo);
-    if (status) {
-        nucf_err(status);
-    }
+    app_shutdown(sysInfo);
 
     return 0;
 }

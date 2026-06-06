@@ -1,0 +1,1 @@
+/* enum and union for global error types of int */

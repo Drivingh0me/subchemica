@@ -1,4 +1,4 @@
-#include "subchemica.h"
+#include "app.h"
 
 #include "math.h"
 #include "export.h"
@@ -11,12 +11,26 @@ typedef struct {
     int length;
     int lines;
     double *data;
-} nucfData;
+} Data;
 
 typedef struct {
     int sets;
-    nucfData *data_arr;
-} nucfDataset;
+    Data *data_arr;
+} Dataset;
+
+/* argsparse
+ * The flags array is an int of each flag given in order.
+ * The args array is the start then end index of argv given to each flag
+ * in same order as flags.
+ * EX:
+ * flags[0] is open file.
+ * args[0] is first argv index passed (-1 if none)
+ * and args[1] is index of last arg given to open file.
+*/
+typedef struct {
+    int* flags;
+    int* args;
+} argsparse;
 
 static void cleanup()
 {
@@ -35,7 +49,7 @@ int function2(int a)
     return 0;
 }
 
-void nucf_err(int errno)
+void app_err(int errno)
 {
     if (errno < 0) {
         /* Uses ANSI escape sequence to color error message. */
@@ -50,7 +64,11 @@ void nucf_err(int errno)
     }
 }
 
-static int parse_args(int argc, char **argv, int *runTui)
+/* FLAGS:
+ * -t/--tui: Run TUI
+ * -l/--load: Load a file or directory
+*/
+static void parse_args(int argc, char **argv, int *runTui)
 {
     *runTui = 0;
     if (argc == 1) {
@@ -64,22 +82,20 @@ static int parse_args(int argc, char **argv, int *runTui)
             }
         }
     }
-
-    return 0;
 }
 
-static void nucf_export()
+static void export()
 {
     printf("Exporting.\n");
 }
 
-static int nucf_run_analysis(nucfDataset data)
+static int run_analysis(Dataset data)
 {
     char should_export = 0;
     int status;
 
     if (should_export) {
-        nucf_export();
+        export();
     }
 
     // status = fit();
@@ -90,54 +106,39 @@ static int nucf_run_analysis(nucfDataset data)
     return 0;
 }
 
-static int nucf_coalesce_data(nucfDataset *dataset)
+static int coalesce_data(Dataset *dataset)
 {
     printf("Coalescing data.\n");
 
     return 0;
 }
 
-int nucf_startup(nucfSystemInfo *sysInfo)
+int app_startup(SystemInfo *sysInfo)
 {
-    // Check system info.
+    /* Check system info. */
     return 0;
 }
 
-int nucf_run_app(int argc, char **argv, nucfSystemInfo sysInfo)
+int run_app(int argc, char **argv, SystemInfo *sysInfo)
 {
-    int status = -1;
+    int status;
     int runTui;
-    nucfDataset dataset;
+    Dataset dataset;
     Toolset tools;
 
     tools.func[COALESCE] = function1;
     tools.func[ANALYSIS] = function2;
 
-    status = parse_args(argc, argv, &runTui);
-    if (status) {
-        return status;
-    }
+    parse_args(argc, argv, &runTui);
 
     if (runTui) {
         run_tui(tools);
     }
 
-    // status = nucf_coalesce_data(userCommand, &dataset);
-    // if (status) {
-    //     return status;
-    // }
-    //
-    // status = nucf_run_analysis(dataset);
-    // if (status) {
-    //     return status;
-    // }
-
     return 0;
 }
 
-int nucf_shutdown(nucfSystemInfo *sysInfo)
+void app_shutdown(SystemInfo sysInfo)
 {
     cleanup();
-
-    return 0;
 }

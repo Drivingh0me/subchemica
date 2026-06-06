@@ -12,10 +12,10 @@ enum Tool {
     ANALYSIS
 };
 
-typedef struct {
-    double *arr;
-    unsigned int arrLen;
-} Data;
+// typedef struct {
+//     double *arr;
+//     unsigned int arrLen;
+// } Data;
 
 typedef struct {
     int (*func[2])(int);
