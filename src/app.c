@@ -49,17 +49,16 @@ int function2(int a)
     return 0;
 }
 
+/* Do not cleanup, just report error */
 void app_err(int errno)
 {
     if (errno < 0) {
         /* Uses ANSI escape sequence to color error message. */
         printf(REDBOLD "FATAL ERROR: %d" RESET "\n", errno);
-        cleanup();
         exit(errno);
     } else {
         printf(REDBOLD "RECOVERABLE ERROR: %d BECAME FATAL.\n" RESET
                "This is likely a bug.\n", errno);
-        cleanup();
         exit(errno);
     }
 }
@@ -116,6 +115,7 @@ static int coalesce_data(Dataset *dataset)
 int app_startup(SystemInfo *sysInfo)
 {
     /* Check system info. */
+    /* Cleanup here with sysinfo if error */
     return 0;
 }
 
@@ -134,11 +134,13 @@ int run_app(int argc, char **argv, SystemInfo *sysInfo)
     if (runTui) {
         run_tui(tools);
     }
+    /* Cleanup here with sysinfo if error */
 
     return 0;
 }
 
-void app_shutdown(SystemInfo sysInfo)
+void app_shutdown(SystemInfo &sysInfo)
 {
+    /* Free all memory used by main run */
     cleanup();
 }

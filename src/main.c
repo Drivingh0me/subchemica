@@ -16,7 +16,7 @@ int main(int argc, char **argv)
         app_err(status);
     }
 
-    app_shutdown(sysInfo);
+    app_shutdown(&sysInfo);
 
     return 0;
 }
