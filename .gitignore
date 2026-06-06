@@ -59,3 +59,13 @@ dkms.conf
 
 # Compiled binaries
 build
+bin
+
+# Object files
+obj
+
+# Random tex stuff
+*.aux
+*.log
+*.pdf
+*.gz

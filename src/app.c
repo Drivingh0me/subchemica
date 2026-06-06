@@ -3,6 +3,7 @@
 #include "math.h"
 #include "export.h"
 #include "tui.h"
+#include <target.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,6 +27,9 @@ typedef struct {
  * flags[0] is open file.
  * args[0] is first argv index passed (-1 if none)
  * and args[1] is index of last arg given to open file.
+ * flags:
+ * -d/--debug
+ * -f/--file
 */
 typedef struct {
     int* flags;
@@ -116,6 +120,19 @@ int app_startup(SystemInfo *sysInfo)
 {
     /* Check system info. */
     /* Cleanup here with sysinfo if error */
+    /* Consider impl a lite argparse into here so that sysinfo doesn't
+     * have to be filled if not needed.
+     * impl:
+     * --version, -v
+     * -- help, -h
+     * -s, --system (do not get system info)
+     * OS upon --version.
+     */
+    int mem;
+    int status;
+
+    status = TARG_mem_limit(&mem);
+
     return 0;
 }
 
@@ -139,7 +156,7 @@ int run_app(int argc, char **argv, SystemInfo *sysInfo)
     return 0;
 }
 
-void app_shutdown(SystemInfo &sysInfo)
+void app_shutdown(SystemInfo *sysInfo)
 {
     /* Free all memory used by main run */
     cleanup();
