@@ -65,7 +65,12 @@ bin
 obj
 
 # Random tex stuff
+.log
 *.aux
 *.log
+*.toc
+*.fls
+*.out
+*.fdb_latexmk
 *.pdf
 *.gz

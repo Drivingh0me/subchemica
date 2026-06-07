@@ -31,17 +31,18 @@ LDFLAGS =
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) -o $(BUILD_DIR)/$(TARGET) $(LDFLAGS)
+	$(CC) $< $(CFLAGS) -o $(BUILD_DIR)/$(TARGET)
 
 $(OBJS): $(SRCS)
-	mkdir -p $(BUILD_DIR)
-	$(CC) -c $< $(CFLAGS) -o $@
+	mkdir -p $(BUILD_DIR)/$(SRC_DIR)
+	$(CC) -c $< $(CFLAGS) -o $(BUILD_DIR)/$@
 
-debug: CFLAGS = -Wall -Wextra -I$(INCLUDE_DIR) -g -O0
-debug: clean $(TARGET)
+# debug: CFLAGS = -Wall -Wextra -I$(INCLUDE_DIR) -g -O0
+# debug: clean $(TARGET)
 
 clean:
-	# rm -f $(BUILD_DIR)/$(OBJS) $(TARGET)
-	rm -f $(OBJS) $(TARGET)
+	rm -rf $(BUILD_DIR)
+	rm $(BUILD_DIR)/*.o
 
-.PHONY: all clean debug
+# .PHONY: all clean debug
+.PHONY: all clean
