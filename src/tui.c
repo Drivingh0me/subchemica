@@ -83,14 +83,14 @@ void run_tui(Toolset tools)
 
         if (same_word(buffer, "func1\n")) {
             /* Deetermine how much str to give func */
-            waste = tools.func[COALESCE](1);
+            waste = tools.func[COALESCE](buffer);
             if (waste) {
                 throw_err(waste);
             }
         }
 
         if (same_word(buffer, "func2\n")) {
-            waste = tools.func[ANALYSIS](2);
+            waste = tools.func[ANALYSIS](buffer);
             if (waste) {
                 throw_err(waste);
             }
