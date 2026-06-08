@@ -13,7 +13,7 @@ ifeq ($(shell uname -s),Darwin)
 endif
 
 ifeq ($(shell uname -s),Linux)
-	PLATFORM := linux
+	PLATFORM := Linux
 endif
 
 PLATFORM_DIR = platform/$(PLATFORM)
@@ -22,8 +22,8 @@ SRCS := $(wildcard $(SRC_DIR)/*.c)
 SRCS += $(wildcard $(PLATFORM_DIR)/*.c)
 # $(info $$SRCS is [${SRCS}])
 
-OBJS = $(SRCS:.c=.o)
-# OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+# OBJS = $(SRCS:.c=.o)
+OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 
 CFLAGS = -Wall -Wextra -I$(INCLUDE_DIR) -O2
 LDFLAGS =
