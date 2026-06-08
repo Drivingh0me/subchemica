@@ -82,6 +82,7 @@ void run_tui(Toolset tools)
         }
 
         if (same_word(buffer, "func1\n")) {
+            /* Deetermine how much str to give func */
             waste = tools.func[COALESCE](1);
             if (waste) {
                 throw_err(waste);

@@ -41,15 +41,15 @@ static void cleanup()
     printf("Cleaning up.\n");
 }
 
-int function1(int a)
+int function1(char *str)
 {
-    printf("Function%d ran.\n", a);
+    printf("Function1 ran. %s\n", str);
     return 0;
 }
 
-int function2(int a)
+int function2(char *str)
 {
-    printf("Function%d ran.\n", a);
+    printf("Function2 ran. %s\n", str);
     return 0;
 }
 

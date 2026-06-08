@@ -18,7 +18,7 @@ enum Tool {
 // } Data;
 
 typedef struct {
-    int (*func[2])(int);
+    int (*func[2])(char *);
 } Toolset;
 
 /* Special case*/
