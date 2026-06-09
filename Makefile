@@ -35,10 +35,18 @@ all: $(TARGET)
 $(TARGET): $(OBJS) $(PLAT_OBJ)
 	$(CC) $^ $(CT_FLAGS) -o $(BUILD_DIR)/$(TARGET)
 
-$(PLAT_OBJ): $(PLAT_SRC)
+# $(PLAT_OBJ): $(PLAT_SRC)
+# 	$(CC) -c $< $(CFLAGS) -o $@
+#
+# $(OBJS): $(SRCS)
+# 	mkdir -p $(BUILD_DIR)
+# 	$(CC) -c $< $(CFLAGS) -o $@
+
+$(BUILD_DIR)/%.o: $(PLATFORM_DIR)/%.c
+	mkdir -p $(BUILD_DIR)
 	$(CC) -c $< $(CFLAGS) -o $@
 
-$(OBJS): $(SRCS)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(BUILD_DIR)
 	$(CC) -c $< $(CFLAGS) -o $@
 

@@ -24,6 +24,18 @@ static int same_word(char* sample, char *key)
         }
         i++;
     }
+    return 1;
+}
+
+static int exact_command(char* sample, char *key)
+{
+    int i = 0;
+    while (key[i] != '\n') {
+        if (sample[i] != key[i] || sample[i] == '\n') {
+            return 0;
+        }
+        i++;
+    }
     if (sample[i] != '\n') {
         return 0;
     }
@@ -49,11 +61,11 @@ void run_tui(Toolset tools)
     // unsigned short numPaths = 0;
 
     int tuiShouldRun = 1;
-    char buffer[256];
+    char buffer[80];
     char *a;
     int waste;
 
-    printf("nucleofile V0.1\nAangstrom interpreter running.\n");
+    printf("subchemica V0.1.1\nAangstrom interpreter running.\n");
     while (tuiShouldRun) {
         TARG_get_term_size(&termRows, &termCols);
         /* Prints "> " in blue */
@@ -66,11 +78,11 @@ void run_tui(Toolset tools)
             tuiShouldRun = 0;
         }
 
-        if (same_word(buffer, "quit\n")) {
+        if (exact_command(buffer, "quit\n")) {
             tuiShouldRun = 0;
         }
 
-        if (same_word(buffer, "clear\n")) {
+        if (exact_command(buffer, "clear\n")) {
             printf(CLEAR CURSOR_HOME);
         }
 
