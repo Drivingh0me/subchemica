@@ -1,4 +1,4 @@
-#include "math.h"
+#include "compute.h"
 
 // #include <gsl/gsl_fit.h>
 // #include <gsl/gsl_multifit_nlinear.h>

@@ -1,8 +1,9 @@
 #include "app.h"
 
-#include "math.h"
+#include "compute.h"
 #include "export.h"
 #include "tui.h"
+#include "interpreter.h"
 #include <target.h>
 
 #include <stdio.h>
@@ -23,18 +24,21 @@ typedef struct {
  * The flags array is an int of each flag given in order.
  * The args array is the start then end index of argv given to each flag
  * in same order as flags.
+ * 0 is last flag.
  * EX:
  * flags[0] is open file.
  * args[0] is first argv index passed (-1 if none)
  * and args[1] is index of last arg given to open file.
  * flags:
- * -d/--debug
- * -f/--file
+ * -d/--debug 1
+ * -f/--file 2 (takes args)
+ * -t/--tui 3
+ * -i/--interpreter 4
 */
 typedef struct {
-    int* flags;
-    int* args;
-} argsparse;
+    int flags[32];
+    int args[64];
+} ArgParse;
 
 static void cleanup()
 {
@@ -71,49 +75,31 @@ void app_err(int errno)
  * -t/--tui: Run TUI
  * -l/--load: Load a file or directory
 */
-static void parse_args(int argc, char **argv, int *runTui)
+static void parse_args(int argc, char **argv, ArgParse *args)
 {
-    *runTui = 0;
-    if (argc == 1) {
-        *runTui = 1;
+    int i = 0;
+
+    if (argc <= 1) {
+        args->flags[0] = 4;
+        args->flags[1] = 0;
+        return;
     }
 
-    if (argc > 1) {
-        if (argv[2][0] == '-') {
-            if (argv[2][1] == 't') {
-                *runTui = 1;
-            }
+    for (i < argc; i++) {
+        if (argv[0] == '-') {
+            get_flag(that);
+            continue;
+            /* check for "--" */
         }
-    }
-}
 
-static void export()
-{
-    printf("Exporting.\n");
-}
-
-static int run_analysis(Dataset data)
-{
-    char should_export = 0;
-    int status;
-
-    if (should_export) {
-        export();
+        append_flag_arg(i);
     }
 
-    // status = fit();
-    // if (status) {
-    //     return 3;
+    // if (argv[2][0] == '-') {
+    //     if (argv[2][1] == 't') {
+    //         *runInterpreter = 1;
+    //     }
     // }
-
-    return 0;
-}
-
-static int coalesce_data(Dataset *dataset)
-{
-    printf("Coalescing data.\n");
-
-    return 0;
 }
 
 int app_startup(SystemInfo *sysInfo)
@@ -139,17 +125,18 @@ int app_startup(SystemInfo *sysInfo)
 int run_app(int argc, char **argv, SystemInfo *sysInfo)
 {
     int status;
-    int runTui;
-    Dataset dataset;
+    int runInterpreter;
+    ArgParse args;
+    // Dataset dataset;
     Toolset tools;
 
     tools.func[COALESCE] = function1;
     tools.func[ANALYSIS] = function2;
 
-    parse_args(argc, argv, &runTui);
+    parse_args(argc, argv, &args);
 
-    if (runTui) {
-        run_tui(tools);
+    if (runInterpreter) {
+        run_interpreter(tools);
     }
     /* Cleanup here with sysinfo if error */
 
