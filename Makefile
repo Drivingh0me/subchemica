@@ -4,7 +4,7 @@ TARGET = subchemica
 
 SRC_DIR := src
 BUILD_DIR = build
-BIN_DIR = bin
+# BIN_DIR = bin
 INCLUDE_DIR = include
 
 # This selects the paltform
@@ -26,13 +26,14 @@ PLAT_SRC := $(wildcard $(PLATFORM_DIR)/*.c)
 OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 PLAT_OBJ := $(patsubst $(PLATFORM_DIR)/%.c, $(BUILD_DIR)/%.o, $(PLAT_SRC))
 
-CFLAGS = -Wall -Wextra -I$(INCLUDE_DIR) -O2
+CFLAGS = -Wall -Wextra -I$(INCLUDE_DIR)
+CT_FLAGS = -Wall -Wextra
 LDFLAGS =
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(PLAT_OBJ)
-	$(CC) $^ $(CFLAGS) -o $(BUILD_DIR)/$(TARGET)
+	$(CC) $^ $(CT_FLAGS) -o $(BUILD_DIR)/$(TARGET)
 
 $(PLAT_OBJ): $(PLAT_SRC)
 	$(CC) -c $< $(CFLAGS) -o $@

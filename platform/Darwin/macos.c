@@ -12,3 +12,9 @@ void TARG_get_term_size(int *rows, int *cols)
         *cols = -1;
     }
 }
+
+int TARG_mem_limit(int *memory)
+{
+    *memory = 0;
+    return 0;
+}
