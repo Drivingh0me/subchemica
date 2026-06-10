@@ -1,14 +1,14 @@
 #include "app.h"
+#include "error.h"
 
 int main(int argc, char **argv)
 {
-    /* Add atf, alloc to free to nucf_err pass*/
     int status;
     SystemInfo sysInfo;
 
     status = app_startup(&sysInfo);
     if (status) {
-        app_err(status);
+        app_err(status, sysInfo.errorState);
     }
 
     status = run_app(argc, argv, &sysInfo);

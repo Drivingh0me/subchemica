@@ -4,6 +4,7 @@
 #include "export.h"
 #include "tui.h"
 #include "interpreter.h"
+#include "error.h"
 #include <target.h>
 
 #include <stdio.h>
@@ -19,6 +20,8 @@ typedef struct {
     int sets;
     Data *data_arr;
 } Dataset;
+
+#define ARG_MAX 64
 
 /* argsparse
  * The flags array is an int of each flag given in order.
@@ -36,8 +39,8 @@ typedef struct {
  * -i/--interpreter 4
 */
 typedef struct {
-    int flag[32];
-    int arg[64];
+    int flag[ARG_MAX];
+    int arg[2 * ARG_MAX];
 } ArgParse;
 
 static void cleanup()
@@ -55,20 +58,6 @@ int function2(char *str)
 {
     printf("Function2 ran. %s\n", str);
     return 0;
-}
-
-/* Do not cleanup, just report error */
-void app_err(int errno)
-{
-    if (errno < 0) {
-        /* Uses ANSI escape sequence to color error message. */
-        printf(REDBOLD "FATAL ERROR: %d" RESET "\n", errno);
-        exit(errno);
-    } else {
-        printf(REDBOLD "RECOVERABLE ERROR: %d BECAME FATAL.\n" RESET
-               "This is likely a bug.\n", errno);
-        exit(errno);
-    }
 }
 
 int get_flag(char c)
@@ -98,9 +87,7 @@ static void parse_args(int argc, char **argv, ArgParse *args)
         return;
     }
 
-    /* TODO! prevent repeating the same flag */
-    for (i = 1; i < argc; i++) {
-        printf("i:%d\n", i);
+    for (i = 1; i < argc && x < ARG_MAX; i++) {
         if (argv[i][0] == '-') {
             args->flag[x] = get_flag(argv[i][1]);
             args->arg[2 * x] = i + 1;
@@ -120,6 +107,8 @@ static void parse_args(int argc, char **argv, ArgParse *args)
 
     /* terminates flag */
     args->flag[x] = 0;
+
+    /* Set previous arg to end */
     if (x > 0) {
         args->arg[2 * x - 1] = i - 1;
     }
@@ -140,6 +129,9 @@ int app_startup(SystemInfo *sysInfo)
     int mem;
     int status;
 
+    sysInfo->errorState.err = 0;
+    add_err_msg(sysInfo->errorState.errMsg, "No Error");
+
     status = TARG_mem_limit(&mem);
 
     return 0;
@@ -147,13 +139,12 @@ int app_startup(SystemInfo *sysInfo)
 
 int run_app(int argc, char **argv, SystemInfo *sysInfo)
 {
-    int status;
-    int runInterpreter;
     ArgParse args;
     // Dataset dataset;
     Toolset tools;
     int i = 0;
 
+    /* All tools */
     tools.func[COALESCE] = function1;
     tools.func[ANALYSIS] = function2;
 
@@ -162,18 +153,17 @@ int run_app(int argc, char **argv, SystemInfo *sysInfo)
         return args.flag[0];
     }
 
-    while (args.flag[i] > 0) {
-        printf("flag: %d, arg start: %d, arg end: %d\n", 
-               args.flag[i], args.arg[2 * i], args.arg[2 * i + 1]);
-        if (args.flag[i] == 4) {
-            runInterpreter = 1;
-        }
-        i++;
-    }
+    return execute_args(args, argv);
 
-    if (runInterpreter) {
-        run_interpreter(tools);
-    }
+    // while (args.flag[i] > 0) {
+    //     printf("flag: %d, arg start: %d, arg end: %d\n", 
+    //            args.flag[i], args.arg[2 * i], args.arg[2 * i + 1]);
+    //     if (args.flag[i] == 4) {
+    //         run_interpreter(tools);
+    //     }
+    //     i++;
+    // }
+
     /* Cleanup here with sysinfo if error */
 
     return 0;
