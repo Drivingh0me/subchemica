@@ -87,13 +87,9 @@ int get_flag(char c)
     }
 }
 
-/* FLAGS:
- * -t/--tui: Run TUI
- * -l/--load: Load a file or directory
-*/
 static void parse_args(int argc, char **argv, ArgParse *args)
 {
-    int i = 1;
+    int i;
     int x = 0;
 
     if (argc <= 1) {
@@ -102,7 +98,9 @@ static void parse_args(int argc, char **argv, ArgParse *args)
         return;
     }
 
-    for (i < argc; i++;) {
+    /* TODO! prevent repeating the same flag */
+    for (i = 1; i < argc; i++) {
+        printf("i:%d\n", i);
         if (argv[i][0] == '-') {
             args->flag[x] = get_flag(argv[i][1]);
             args->arg[2 * x] = i + 1;
@@ -117,13 +115,14 @@ static void parse_args(int argc, char **argv, ArgParse *args)
             }
 
             x++;
-            // continue;
-            /* check for "--" */
         }
     }
 
-    /* terminates the flags */
+    /* terminates flag */
     args->flag[x] = 0;
+    if (x > 0) {
+        args->arg[2 * x - 1] = i - 1;
+    }
 }
 
 int app_startup(SystemInfo *sysInfo)
@@ -159,9 +158,9 @@ int run_app(int argc, char **argv, SystemInfo *sysInfo)
     tools.func[ANALYSIS] = function2;
 
     parse_args(argc, argv, &args);
-    // if (args.flag[0] == 0) {
-    //     runInterpreter = 1;
-    // }
+    if (args.flag[0] < 0) {
+        return args.flag[0];
+    }
 
     while (args.flag[i] > 0) {
         printf("flag: %d, arg start: %d, arg end: %d\n", 
