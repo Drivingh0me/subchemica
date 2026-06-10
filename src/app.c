@@ -36,8 +36,8 @@ typedef struct {
  * -i/--interpreter 4
 */
 typedef struct {
-    int flags[32];
-    int args[64];
+    int flag[32];
+    int arg[64];
 } ArgParse;
 
 static void cleanup()
@@ -71,35 +71,59 @@ void app_err(int errno)
     }
 }
 
+int get_flag(char c)
+{
+    switch (c) {
+        case 'd':
+            return 1;
+        case 'f':
+            return 2;
+        case 't':
+            return 3;
+        case 'i':
+            return 4;
+        default:
+            return -1;
+    }
+}
+
 /* FLAGS:
  * -t/--tui: Run TUI
  * -l/--load: Load a file or directory
 */
 static void parse_args(int argc, char **argv, ArgParse *args)
 {
-    int i = 0;
+    int i = 1;
+    int x = 0;
 
     if (argc <= 1) {
-        args->flags[0] = 4;
-        args->flags[1] = 0;
+        args->flag[0] = 4;
+        args->flag[1] = 0;
         return;
     }
 
-    for (i < argc; i++) {
-        if (argv[0] == '-') {
-            get_flag(that);
-            continue;
+    for (i < argc; i++;) {
+        if (argv[i][0] == '-') {
+            args->flag[x] = get_flag(argv[i][1]);
+            args->arg[2 * x] = i + 1;
+            if (x > 0) {
+                args->arg[2 * x - 1] = i - 1;
+            }
+
+            if (args->flag[x] == -1) {
+                /* Not a flag, error */
+                args->flag[0] = -1;
+                args->flag[1] = 0;
+            }
+
+            x++;
+            // continue;
             /* check for "--" */
         }
-
-        append_flag_arg(i);
     }
 
-    // if (argv[2][0] == '-') {
-    //     if (argv[2][1] == 't') {
-    //         *runInterpreter = 1;
-    //     }
-    // }
+    /* terminates the flags */
+    args->flag[x] = 0;
 }
 
 int app_startup(SystemInfo *sysInfo)
@@ -129,11 +153,24 @@ int run_app(int argc, char **argv, SystemInfo *sysInfo)
     ArgParse args;
     // Dataset dataset;
     Toolset tools;
+    int i = 0;
 
     tools.func[COALESCE] = function1;
     tools.func[ANALYSIS] = function2;
 
     parse_args(argc, argv, &args);
+    // if (args.flag[0] == 0) {
+    //     runInterpreter = 1;
+    // }
+
+    while (args.flag[i] > 0) {
+        printf("flag: %d, arg start: %d, arg end: %d\n", 
+               args.flag[i], args.arg[2 * i], args.arg[2 * i + 1]);
+        if (args.flag[i] == 4) {
+            runInterpreter = 1;
+        }
+        i++;
+    }
 
     if (runInterpreter) {
         run_interpreter(tools);
