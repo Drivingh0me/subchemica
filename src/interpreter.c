@@ -10,11 +10,6 @@ void printxt(char* str, int len)
     fwrite(str, 1, len, stdout);
 }
 
-void throw_err(int err)
-{
-    printf(REDBOLD "Error: %d" RESET, err);
-}
-
 int same_word(char* sample, char *key)
 {
     int i = 0;
@@ -52,20 +47,15 @@ static int interpreter_parse(char* buffer)
     return 0;
 }
 
-void run_interpreter(Toolset tools)
+int run_interpreter(Toolset tools)
 {
     int termRows;
     int termCols;
 
-    // enum Command req[12];
-    // unsigned short numReq = 0;
-    // char paths[20];
-    // unsigned short numPaths = 0;
-
     int interpreterShouldRun = 1;
-    char buffer[80];
+    char buffer[256];
     char *a;
-    int waste;
+    int status;
 
     printf("subchemica V0.1.1\nAangstrom interpreter running.\n");
     while (interpreterShouldRun) {
@@ -88,26 +78,29 @@ void run_interpreter(Toolset tools)
             printf(CLEAR CURSOR_HOME);
         }
 
+        /* Add help */
+
         /* ITERATED CASES */
         /* Operator and tool calls */
-        waste = interpreter_parse(buffer);
-        if (waste) {
-            throw_err(waste);
+        status = interpreter_parse(buffer);
+        if (status) {
+            return status;
         }
 
         if (same_word(buffer, "func1\n")) {
             /* Deetermine how much str to give func */
-            waste = tools.func[COALESCE](buffer);
-            if (waste) {
-                throw_err(waste);
+            status = tools.func[COALESCE](buffer);
+            if (status) {
+                return status;
             }
         }
 
         if (same_word(buffer, "func2\n")) {
-            waste = tools.func[ANALYSIS](buffer);
-            if (waste) {
-                throw_err(waste);
+            status = tools.func[ANALYSIS](buffer);
+            if (status) {
+                return status;
             }
         }
     }
+    return 0;
 }

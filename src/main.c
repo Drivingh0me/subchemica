@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 
     status = app_startup(&sysInfo);
     if (status) {
-        app_err(status, sysInfo.errorState);
+        app_err(status);
     }
 
     status = run_app(argc, argv, &sysInfo);

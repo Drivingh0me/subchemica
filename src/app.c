@@ -72,7 +72,7 @@ int get_flag(char c)
         case 'i':
             return 4;
         default:
-            return -1;
+            return INVALID_ARG;
     }
 }
 
@@ -95,9 +95,9 @@ static void parse_args(int argc, char **argv, ArgParse *args)
                 args->arg[2 * x - 1] = i - 1;
             }
 
-            if (args->flag[x] == -1) {
+            if (args->flag[x] == INVALID_ARG) {
                 /* Not a flag, error */
-                args->flag[0] = -1;
+                args->flag[0] = INVALID_ARG;
                 args->flag[1] = 0;
             }
 
@@ -112,6 +112,43 @@ static void parse_args(int argc, char **argv, ArgParse *args)
     if (x > 0) {
         args->arg[2 * x - 1] = i - 1;
     }
+}
+
+int execute_args(ArgParse args, char **argv)
+{
+    int i = 0;
+    int status;
+
+    Toolset tools;
+    tools.func[COALESCE] = function1;
+    tools.func[ANALYSIS] = function2;
+
+    while (args.flag[i] > 0) {
+        /* must match args */
+        switch (args.flag[i]) {
+            case 1:
+                /* debug */
+                break;
+            case 2:
+                /* file */
+                break;
+            case 3:
+                /* TUI */
+                break;
+            case 4:
+                status = run_interpreter(tools);
+                break;
+            default:
+                return INVALID_VAL;
+        }
+        i++;
+    }
+    return 0;
+
+/* Goto is chiasm form */
+Cleanup:
+    cleanup();
+    return status;
 }
 
 int app_startup(SystemInfo *sysInfo)
@@ -129,8 +166,8 @@ int app_startup(SystemInfo *sysInfo)
     int mem;
     int status;
 
-    sysInfo->errorState.err = 0;
-    add_err_msg(sysInfo->errorState.errMsg, "No Error");
+    // sysInfo->errorState.err = 0;
+    // add_err_msg(sysInfo->errorState.errMsg, "No Error");
 
     status = TARG_mem_limit(&mem);
 
@@ -140,13 +177,6 @@ int app_startup(SystemInfo *sysInfo)
 int run_app(int argc, char **argv, SystemInfo *sysInfo)
 {
     ArgParse args;
-    // Dataset dataset;
-    Toolset tools;
-    int i = 0;
-
-    /* All tools */
-    tools.func[COALESCE] = function1;
-    tools.func[ANALYSIS] = function2;
 
     parse_args(argc, argv, &args);
     if (args.flag[0] < 0) {
@@ -154,19 +184,6 @@ int run_app(int argc, char **argv, SystemInfo *sysInfo)
     }
 
     return execute_args(args, argv);
-
-    // while (args.flag[i] > 0) {
-    //     printf("flag: %d, arg start: %d, arg end: %d\n", 
-    //            args.flag[i], args.arg[2 * i], args.arg[2 * i + 1]);
-    //     if (args.flag[i] == 4) {
-    //         run_interpreter(tools);
-    //     }
-    //     i++;
-    // }
-
-    /* Cleanup here with sysinfo if error */
-
-    return 0;
 }
 
 void app_shutdown(SystemInfo *sysInfo)

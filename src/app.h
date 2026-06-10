@@ -1,11 +1,12 @@
 #ifndef APP_H
 #define APP_H
 
+#include "error.h"
+
 typedef struct {
     char liteRun; /* If system is weak, do a lite run */
     int memAvail; /* Max memory available in KB, MAX 64 GB */
     int **heapAlloc;
-    ErrorState errorState;
 } SystemInfo;
 
 int app_startup(SystemInfo *sysInfo);

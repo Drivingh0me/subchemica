@@ -40,7 +40,7 @@ typedef struct {
 #define COLOR256 "\033[38;5;%dm"
 #define REDBOLD "\033[1;31m"
 
-void run_interpreter(Toolset tools);
+int run_interpreter(Toolset tools);
 void printxt(char* str, int len);
 int same_word(char* sample, char *key);
 int exact_command(char* sample, char *key);
