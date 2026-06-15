@@ -12,7 +12,7 @@ void run_tui(Toolset tools)
     int termRows;
     int termCols;
     int tuiShouldRun = 1;
-    char buffer[80];
+    char buffer[256];
     char *a;
     int waste;
 

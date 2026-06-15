@@ -136,6 +136,7 @@ int execute_args(ArgParse args, char **argv)
                 /* TUI */
                 break;
             case 4:
+                /* Interpreter */
                 status = run_interpreter(tools);
                 break;
             default:
