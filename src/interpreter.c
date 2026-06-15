@@ -37,14 +37,31 @@ int exact_command(char* sample, char *key)
     return 1;
 }
 
-static int interpreter_parse(char* buffer)
+static int interpreter_parse(char* buffer, Toolset tools)
 {
+    int status = 0;
     /* needs to be easy to add calls and still be fast */
     /* needs to loop through to check for all commands
      * and pass strings to calls */
     /* while *buffer != '\n' {}; */
 
-    return 0;
+    if (same_word(buffer, "echo\n")) {
+        /* Determine how much str to give func */
+        status = tools.func[ECHO](buffer);
+        if (status) {
+            return status;
+        }
+    }
+
+    if (same_word(buffer, "say\n")) {
+        /* Determine how much str to give func */
+        status = tools.func[SAY](buffer);
+        if (status) {
+            return status;
+        }
+    }
+
+    return status;
 }
 
 int run_interpreter(Toolset tools)
@@ -82,25 +99,25 @@ int run_interpreter(Toolset tools)
 
         /* ITERATED CASES */
         /* Operator and tool calls */
-        status = interpreter_parse(buffer);
+        status = interpreter_parse(buffer, tools);
         if (status) {
             return status;
         }
 
-        if (same_word(buffer, "func1\n")) {
-            /* Deetermine how much str to give func */
-            status = tools.func[COALESCE](buffer);
-            if (status) {
-                return status;
-            }
-        }
-
-        if (same_word(buffer, "func2\n")) {
-            status = tools.func[ANALYSIS](buffer);
-            if (status) {
-                return status;
-            }
-        }
+        // if (same_word(buffer, "func1\n")) {
+        //     /* Deetermine how much str to give func */
+        //     status = tools.func[COALESCE](buffer);
+        //     if (status) {
+        //         return status;
+        //     }
+        // }
+        //
+        // if (same_word(buffer, "func2\n")) {
+        //     status = tools.func[ANALYSIS](buffer);
+        //     if (status) {
+        //         return status;
+        //     }
+        // }
     }
     return 0;
 }

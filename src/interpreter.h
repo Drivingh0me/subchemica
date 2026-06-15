@@ -8,8 +8,8 @@ enum Command {
 };
 
 enum Tool {
-    COALESCE,
-    ANALYSIS
+    ECHO,
+    SAY
 };
 
 // typedef struct {

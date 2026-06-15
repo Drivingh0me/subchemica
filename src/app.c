@@ -50,13 +50,13 @@ static void cleanup()
 
 int function1(char *str)
 {
-    printf("Function1 ran. %s\n", str);
+    printf("%s\n", str);
     return 0;
 }
 
 int function2(char *str)
 {
-    printf("Function2 ran. %s\n", str);
+    printf("I say: %s\n", str);
     return 0;
 }
 
@@ -120,8 +120,8 @@ int execute_args(ArgParse args, char **argv)
     int status;
 
     Toolset tools;
-    tools.func[COALESCE] = function1;
-    tools.func[ANALYSIS] = function2;
+    tools.func[ECHO] = function1;
+    tools.func[SAY] = function2;
 
     while (args.flag[i] > 0) {
         /* must match args */
