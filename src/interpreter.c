@@ -66,16 +66,17 @@ static int interpreter_parse(char* buffer, Toolset tools)
     */
 
     for (i = 0; i < ws_count; i++) {
-        if (same_word(buffer + ws_index[i], "echo")) {
-            printf("it's echo");
+        if (same_word(buffer + ws_index[i] + 1, "echo")) {
+            printf("it's echo\n");
             /* Determine how much str to give func */
             i++;
-            status = tools.func[ECHO](buffer + ws_index[i]);
+            status = tools.func[ECHO](buffer + ws_index[i] + 1);
             if (status) {
                 return status;
             }
         } else {
-            printf("not echo");
+            printf("not echo\n");
+            printf("str: %s", buffer  + ws_index[i]);
         }
     }
 
