@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 
+/* REPL - Read Eval Print Loop */
+
 void printxt(char* str, int len)
 {
     fwrite(str, 1, len, stdout);
@@ -13,8 +15,8 @@ void printxt(char* str, int len)
 int same_word(char* sample, char *key)
 {
     int i = 0;
-    while (key[i] != '\n') {
-        if (sample[i] != key[i] || sample[i] == '\n') {
+    while (key[i] != '\0') {
+        if (sample[i] != key[i]) {
             return 0;
         }
         i++;
@@ -25,13 +27,13 @@ int same_word(char* sample, char *key)
 int exact_command(char* sample, char *key)
 {
     int i = 0;
-    while (key[i] != '\n') {
-        if (sample[i] != key[i] || sample[i] == '\n') {
+    while (key[i] != '\0') {
+        if (sample[i] != key[i]) {
             return 0;
         }
         i++;
     }
-    if (sample[i] != '\n') {
+    if (sample[i] != '\0') {
         return 0;
     }
     return 1;
@@ -40,12 +42,17 @@ int exact_command(char* sample, char *key)
 static int interpreter_parse(char* buffer, Toolset tools)
 {
     int status = 0;
-    /* needs to be easy to add calls and still be fast */
-    /* needs to loop through to check for all commands
-     * and pass strings to calls */
-    /* while *buffer != '\n' {}; */
+    char callback_str[256];
 
-    if (same_word(buffer, "echo\n")) {
+    /* needs to be easy to add calls and still be fast
+    * needs to loop through to check for all commands
+    * and pass strings to calls
+    * while *buffer != '\n' {};
+    * Consider command(str) to pass to command
+    * Consider detect key '\' to start newline without interupting buffer.
+    */
+
+    if (same_word(buffer, "echo")) {
         /* Determine how much str to give func */
         status = tools.func[ECHO](buffer);
         if (status) {
@@ -53,7 +60,7 @@ static int interpreter_parse(char* buffer, Toolset tools)
         }
     }
 
-    if (same_word(buffer, "say\n")) {
+    if (same_word(buffer, "say")) {
         /* Determine how much str to give func */
         status = tools.func[SAY](buffer);
         if (status) {
