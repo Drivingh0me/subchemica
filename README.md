@@ -1,4 +1,4 @@
-# subchemica (sbca)
+# subchemica v0.1.1
 An easy to use interpreter for chemists. The goal of this project is
 to provide an
 easy to use app for chemists to perform tasks that are often behind
