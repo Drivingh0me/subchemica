@@ -49,12 +49,24 @@ static int interpreter_parse(char* buffer, Toolset tools)
     int ws_count = 0;
     int ws_index[128];
 
+    /* Words */
+    int word_index[128];
+
+    /* Find ws_count and ws_index */
     while (buffer[i] != '\0') {
         if (buffer[i] == ' ' || buffer[i] == '\\') {
             ws_index[ws_count] = i;
             ws_count++;
         }
         i++;
+    }
+
+    if (buffer[0] < 32) {
+        word_index[0] = 0;
+    }
+    word_index[0] = 0;
+    for (i = 1; i <= ws_count; i++) {
+        word_index[i] = ws_index[i - 1] + 1;
     }
 
     /* needs to be easy to add calls and still be fast
