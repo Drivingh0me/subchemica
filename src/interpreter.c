@@ -43,7 +43,7 @@ static int interpreter_parse(char* buffer, Toolset tools)
 {
     int status = 0;
     int i = 0;
-    char callback_str[256];
+    // char callback_str[256];
 
     /* White space count */
     int ws_count = 0;
@@ -69,6 +69,10 @@ static int interpreter_parse(char* buffer, Toolset tools)
         word_index[i] = ws_index[i - 1] + 1;
     }
 
+    for (i = 0; i <= ws_count; i++) {
+        printf("i:%d, word index:%d", i, word_index[i]);
+    }
+
     /* needs to be easy to add calls and still be fast
     * needs to loop through to check for all commands
     * and pass strings to calls
@@ -77,12 +81,12 @@ static int interpreter_parse(char* buffer, Toolset tools)
     * Consider detect key '\' to start newline without interupting buffer.
     */
 
-    for (i = 0; i < ws_count; i++) {
-        if (same_word(buffer + ws_index[i] + 1, "echo")) {
+    for (i = 0; i <= ws_count; i++) {
+        if (same_word(buffer + word_index[i], "echo")) {
             printf("it's echo\n");
             /* Determine how much str to give func */
             i++;
-            status = tools.func[ECHO](buffer + ws_index[i] + 1);
+            status = tools.func[ECHO](buffer + word_index[i]);
             if (status) {
                 return status;
             }
