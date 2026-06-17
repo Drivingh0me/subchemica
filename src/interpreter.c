@@ -45,38 +45,6 @@ static int interpreter_parse(char* buffer, Toolset tools)
     int i = 0;
     // char callback_str[256];
 
-    // /* White space count */
-    // int ws_count = 0;
-    // int ws_index[128];
-    //
-    // /* Words */
-    // int word_index[128];
-    //
-    // /* Find ws_count and ws_index */
-    // while (buffer[i] != '\0' && ws_count < 126) {
-    //     if (buffer[i] == ' ') {
-    //         ws_index[ws_count] = i;
-    //         ws_count++;
-    //     }
-    //     i++;
-    // }
-    // ws_index[ws_count] = -1;
-    //
-    // /* This ain't right ----------------------- */
-    // if (buffer[0] < 32) {
-    //     word_index[0] = 0;
-    // }
-    //
-    // for (i = 0; i < ws_count; i++) {
-    //     word_index[i] = ws_index[i]
-    //     word_index[i] = ws_index[i - 1] + 1;
-    // }
-    //
-    // for (i = 0; i <= ws_count; i++) {
-    //     printf("i:%d, word index:%d", i, word_index[i]);
-    // }
-    // /* ----------- */
-
     /* needs to be easy to add calls and still be fast
     * needs to loop through to check for all commands
     * and pass strings to calls
@@ -98,32 +66,27 @@ static int interpreter_parse(char* buffer, Toolset tools)
                 prev_char_ws = 1;
             }
         }
+
+        if (buffer[i] < 33) {
+            prev_char_ws = 1;
+        }
+
         i++;
     }
 
-    for (i = 0; i < word_index; i++) {
+    i = 0;
+    while (i < word_index) {
         if (same_word(buffer + words[i], "echo")) {
-            printf("it's echo\n");
             /* Determine how much str to give func */
             i++;
             status = tools.func[ECHO](buffer + words[i]);
             if (status) {
                 return status;
             }
-        } else {
-            printf("not echo\n");
-            printf("str: %s", buffer  + words[i]);
         }
+        i++;
     }
 
-    // if (same_word(buffer, "echo")) {
-    //     /* Determine how much str to give func */
-    //     status = tools.func[ECHO](buffer);
-    //     if (status) {
-    //         return status;
-    //     }
-    // }
-    //
     if (same_word(buffer, "say")) {
         /* Determine how much str to give func */
         status = tools.func[SAY](buffer);
