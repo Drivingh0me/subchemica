@@ -89,9 +89,14 @@ static int interpreter_parse(char* buffer, Toolset tools)
     int prev_char_ws = 1;
 
     while (buffer[i] != '\0') {
-        if (prev_char_ws && buffer[i] > 32) {
-            words[word_index] = i;
-            word_index++;
+        if (prev_char_ws) {
+            if (buffer[i] > 32) {
+                words[word_index] = i;
+                word_index++;
+                prev_char_ws = 0;
+            } else {
+                prev_char_ws = 1;
+            }
         }
         i++;
     }
