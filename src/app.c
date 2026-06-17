@@ -45,12 +45,12 @@ typedef struct {
 
 static void cleanup()
 {
-    printf("Cleaning up.\n");
+    // printf("Cleaning up.\n");
 }
 
-int function1(char *str)
+int tool_echo(char *str)
 {
-    printf("%s\n", str);
+    printf(GREEN "> " RESET "%s", str);
     return 0;
 }
 
@@ -87,6 +87,8 @@ static void parse_args(int argc, char **argv, ArgParse *args)
         return;
     }
 
+    /* Check for --version and --help explicitely */
+
     for (i = 1; i < argc && x < ARG_MAX; i++) {
         if (argv[i][0] == '-') {
             args->flag[x] = get_flag(argv[i][1]);
@@ -120,7 +122,7 @@ int execute_args(ArgParse args, char **argv)
     int status;
 
     Toolset tools;
-    tools.func[ECHO] = function1;
+    tools.func[ECHO] = tool_echo;
     tools.func[SAY] = function2;
 
     while (args.flag[i] > 0) {

@@ -66,11 +66,9 @@ static int interpreter_parse(char* buffer, Toolset tools)
                 prev_char_ws = 1;
             }
         }
-
         if (buffer[i] < 33) {
             prev_char_ws = 1;
         }
-
         i++;
     }
 
