@@ -45,33 +45,37 @@ static int interpreter_parse(char* buffer, Toolset tools)
     int i = 0;
     // char callback_str[256];
 
-    /* White space count */
-    int ws_count = 0;
-    int ws_index[128];
-
-    /* Words */
-    int word_index[128];
-
-    /* Find ws_count and ws_index */
-    while (buffer[i] != '\0') {
-        if (buffer[i] == ' ' || buffer[i] == '\\') {
-            ws_index[ws_count] = i;
-            ws_count++;
-        }
-        i++;
-    }
-
-    if (buffer[0] < 32) {
-        word_index[0] = 0;
-    }
-    word_index[0] = 0;
-    for (i = 1; i <= ws_count; i++) {
-        word_index[i] = ws_index[i - 1] + 1;
-    }
-
-    for (i = 0; i <= ws_count; i++) {
-        printf("i:%d, word index:%d", i, word_index[i]);
-    }
+    // /* White space count */
+    // int ws_count = 0;
+    // int ws_index[128];
+    //
+    // /* Words */
+    // int word_index[128];
+    //
+    // /* Find ws_count and ws_index */
+    // while (buffer[i] != '\0' && ws_count < 126) {
+    //     if (buffer[i] == ' ') {
+    //         ws_index[ws_count] = i;
+    //         ws_count++;
+    //     }
+    //     i++;
+    // }
+    // ws_index[ws_count] = -1;
+    //
+    // /* This ain't right ----------------------- */
+    // if (buffer[0] < 32) {
+    //     word_index[0] = 0;
+    // }
+    //
+    // for (i = 0; i < ws_count; i++) {
+    //     word_index[i] = ws_index[i]
+    //     word_index[i] = ws_index[i - 1] + 1;
+    // }
+    //
+    // for (i = 0; i <= ws_count; i++) {
+    //     printf("i:%d, word index:%d", i, word_index[i]);
+    // }
+    // /* ----------- */
 
     /* needs to be easy to add calls and still be fast
     * needs to loop through to check for all commands
@@ -80,19 +84,30 @@ static int interpreter_parse(char* buffer, Toolset tools)
     * Consider command(str) to pass to command
     * Consider detect key '\' to start newline without interupting buffer.
     */
+    int words[128];
+    int word_index = 0;
+    int prev_char_ws = 1;
 
-    for (i = 0; i <= ws_count; i++) {
-        if (same_word(buffer + word_index[i], "echo")) {
+    while (buffer[i] != '\0') {
+        if (prev_char_ws && buffer[i] > 32) {
+            words[word_index] = i;
+            word_index++;
+        }
+        i++;
+    }
+
+    for (i = 0; i < word_index; i++) {
+        if (same_word(buffer + words[i], "echo")) {
             printf("it's echo\n");
             /* Determine how much str to give func */
             i++;
-            status = tools.func[ECHO](buffer + word_index[i]);
+            status = tools.func[ECHO](buffer + words[i]);
             if (status) {
                 return status;
             }
         } else {
             printf("not echo\n");
-            printf("str: %s", buffer  + ws_index[i]);
+            printf("str: %s", buffer  + words[i]);
         }
     }
 
@@ -155,21 +170,6 @@ int run_interpreter(Toolset tools)
         if (status) {
             return status;
         }
-
-        // if (same_word(buffer, "func1\n")) {
-        //     /* Deetermine how much str to give func */
-        //     status = tools.func[COALESCE](buffer);
-        //     if (status) {
-        //         return status;
-        //     }
-        // }
-        //
-        // if (same_word(buffer, "func2\n")) {
-        //     status = tools.func[ANALYSIS](buffer);
-        //     if (status) {
-        //         return status;
-        //     }
-        // }
     }
     return 0;
 }
