@@ -112,6 +112,12 @@ static void parse_args(int argc, char **argv, ArgParse *args)
             args->flag[0] = 0;
             return;
         }
+
+        if (exact_command(argv[1], "--help")) {
+            printf("Help not implemented\n");
+            args->flag[0] = 0;
+            return;
+        }
     }
 
     for (i = 1; i < argc && x < ARG_MAX; i++) {
@@ -209,7 +215,7 @@ int run_app(int argc, char **argv, SystemInfo *sysInfo)
     ArgParse args;
 
     parse_args(argc, argv, &args);
-    if (args.flag[0] < 0) {
+    if (args.flag[0] <= 0) {
         return args.flag[0];
     }
 
