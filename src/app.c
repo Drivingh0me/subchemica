@@ -60,7 +60,23 @@ int function2(char *str)
     return 0;
 }
 
-int get_flag(char c)
+int get_short_flag(char c)
+{
+    switch (c) {
+        case 'd':
+            return 1;
+        case 'f':
+            return 2;
+        case 't':
+            return 3;
+        case 'i':
+            return 4;
+        default:
+            return INVALID_ARG;
+    }
+}
+
+int get_long_flag(char c)
 {
     switch (c) {
         case 'd':
@@ -88,10 +104,13 @@ static void parse_args(int argc, char **argv, ArgParse *args)
     }
 
     /* Check for --version and --help explicitely */
+    if (argc == 2) {
+        if (argv[1])
+    }
 
     for (i = 1; i < argc && x < ARG_MAX; i++) {
         if (argv[i][0] == '-') {
-            args->flag[x] = get_flag(argv[i][1]);
+            args->flag[x] = get_short_flag(argv[i][1]);
             args->arg[2 * x] = i + 1;
             if (x > 0) {
                 args->arg[2 * x - 1] = i - 1;
