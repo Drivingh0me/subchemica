@@ -22,6 +22,7 @@ typedef struct {
 } Dataset;
 
 #define ARG_MAX 64
+#define VERSION "subchemica v0.1.1 (pre-alpha)\n"
 
 /* argsparse
  * The flags array is an int of each flag given in order.
@@ -98,6 +99,7 @@ static void parse_args(int argc, char **argv, ArgParse *args)
     int x = 0;
 
     if (argc <= 1) {
+        /* If no args, run interpreter */
         args->flag[0] = 4;
         args->flag[1] = 0;
         return;
@@ -105,11 +107,16 @@ static void parse_args(int argc, char **argv, ArgParse *args)
 
     /* Check for --version and --help explicitely */
     if (argc == 2) {
-        if (argv[1])
+        if (exact_command(argv[1], "--version")) {
+            printf(VERSION);
+            args->flag[0] = 0;
+            return;
+        }
     }
 
     for (i = 1; i < argc && x < ARG_MAX; i++) {
         if (argv[i][0] == '-') {
+            /* Check for --str */
             args->flag[x] = get_short_flag(argv[i][1]);
             args->arg[2 * x] = i + 1;
             if (x > 0) {
@@ -138,7 +145,7 @@ static void parse_args(int argc, char **argv, ArgParse *args)
 int execute_args(ArgParse args, char **argv)
 {
     int i = 0;
-    int status;
+    int status = 0;
 
     Toolset tools;
     tools.func[ECHO] = tool_echo;
@@ -159,6 +166,7 @@ int execute_args(ArgParse args, char **argv)
             case 4:
                 /* Interpreter */
                 status = run_interpreter(tools);
+                if (status) {goto Cleanup;}
                 break;
             default:
                 return INVALID_VAL;
