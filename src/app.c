@@ -77,19 +77,10 @@ int get_short_flag(char c)
     }
 }
 
-int get_long_flag(char c)
+int get_long_flag(char *c)
 {
-    switch (c) {
-        case 'd':
-            return 1;
-        case 'f':
-            return 2;
-        case 't':
-            return 3;
-        case 'i':
-            return 4;
-        default:
-            return INVALID_ARG;
+    if (exact_command(c, "--silent")) {
+        return 9;
     }
 }
 
@@ -122,7 +113,10 @@ static void parse_args(int argc, char **argv, ArgParse *args)
 
     for (i = 1; i < argc && x < ARG_MAX; i++) {
         if (argv[i][0] == '-') {
-            /* Check for --str */
+            /* Check for --long */
+            if (argv[i][1] == '-') {
+                args->flag[x] = get_long_flag(argv[i]);
+            }
             args->flag[x] = get_short_flag(argv[i][1]);
             args->arg[2 * x] = i + 1;
             if (x > 0) {
@@ -173,6 +167,9 @@ int execute_args(ArgParse args, char **argv)
                 /* Interpreter */
                 status = run_interpreter(tools);
                 if (status) {goto Cleanup;}
+                break;
+            case 9:
+                /* silent */
                 break;
             default:
                 return INVALID_VAL;
