@@ -77,6 +77,7 @@ int get_short_flag(char c)
     }
 }
 
+/* Not implemented */
 int get_long_flag(char c)
 {
     switch (c) {
@@ -187,17 +188,11 @@ Cleanup:
     return status;
 }
 
+/* Not implemented */
 int app_startup(SystemInfo *sysInfo)
 {
-    /* Check system info. */
-    /* Cleanup here with sysinfo if error */
-    /* Consider impl a lite argparse into here so that sysinfo doesn't
-     * have to be filled if not needed.
-     * impl:
-     * --version, -v
-     * -- help, -h
-     * -s, --system (do not get system info)
-     * OS upon --version.
+    /* Check system info.
+     * Cleanup here with sysinfo if error
      */
     int mem;
     int status;
@@ -224,6 +219,6 @@ int run_app(int argc, char **argv, SystemInfo *sysInfo)
 
 void app_shutdown(SystemInfo *sysInfo)
 {
-    /* Free all memory used by main run */
+    /* Free all memory and files */
     cleanup();
 }
