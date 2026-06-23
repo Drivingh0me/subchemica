@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* Add print to std err to catch specific fault */
 void print_err(Error err)
 {
     switch (err) {
@@ -40,6 +41,7 @@ void app_err(Error err)
     }
 }
 
+/* Add print to std err to catch specific fault */
 void fatal_err(Error err)
 {
     /* Uses ANSI escape sequence to color error message. */
