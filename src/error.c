@@ -27,7 +27,6 @@ void print_err(Error err)
     }
 }
 
-/* Does not cleanup, just reports error */
 void app_err(Error err)
 {
     if (err < 0) {
@@ -42,7 +41,7 @@ void app_err(Error err)
 }
 
 /* Add print to std err to catch specific fault */
-void fatal_err(Error err)
+void throw_err(Error err)
 {
     /* Uses ANSI escape sequence to color error message. */
     printf(REDBOLD "UNRECOVERABLE ERROR: %d" RESET "\n", err);

@@ -22,8 +22,6 @@ void run_tui(Toolset tools)
         printf(CLEAR CURSOR_HOME);
         printxt(INT_NEWLN, 11);
 
-        /* MUST MATCH CASES */
-        /* Cases to close interpreter */
         a = fgets(buffer, sizeof(buffer), stdin);
         if (a != buffer) {
             tuiShouldRun = 0;

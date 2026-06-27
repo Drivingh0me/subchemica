@@ -24,7 +24,7 @@ typedef enum {
 
 /* Does not cleanup, just reports error */
 void app_err(Error errno);
-void unrecoverable_err(Error err);
+void throw_err(Error err);
 // void add_err_msg(ErrorState errSt, char *str);
 // void throw_err(int err);
 
