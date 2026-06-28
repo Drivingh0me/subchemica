@@ -49,13 +49,18 @@ static void cleanup()
     // printf("Cleaning up.\n");
 }
 
+void print_response(*char str) {
+    printf(GREEN "> " RESET "%s", str);
+}
+
+/* NULL terminates the str, \t seperates args */
 int tool_echo(char *str)
 {
-    printf(GREEN "> " RESET "%s", str);
+    print_response(str);
     return 0;
 }
 
-int function2(char *str)
+int tool_add(char *str)
 {
     printf("I say: %s\n", str);
     return 0;
@@ -149,7 +154,7 @@ int execute_args(ArgParse args, char **argv)
 
     Toolset tools;
     tools.func[ECHO] = tool_echo;
-    tools.func[SAY] = function2;
+    tools.func[SAY] = tool_add;
 
     while (args.flag[i] > 0) {
         /* must match args */

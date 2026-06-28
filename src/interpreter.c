@@ -45,17 +45,11 @@ static int interpreter_parse(char* buffer, Toolset tools)
     int i = 0;
     // char callback_str[256];
 
-    /* needs to be easy to add calls and still be fast
-    * needs to loop through to check for all commands
-    * and pass strings to calls
-    * while *buffer != '\n' {};
-    * Consider command(str) to pass to command
-    * Consider detect key '\' to start newline without interupting buffer.
-    */
     int words[128];
     int word_index = 0;
     int prev_char_ws = 1;
 
+    /* Find words */
     while (buffer[i] != '\0') {
         if (prev_char_ws) {
             if (buffer[i] > 32) {
@@ -72,10 +66,15 @@ static int interpreter_parse(char* buffer, Toolset tools)
         i++;
     }
 
+    /* Call tools from words */
     i = 0;
     while (i < word_index) {
         if (same_word(buffer + words[i], "echo")) {
-            /* Determine how much str to give func */
+            /* TODO!
+             * Determine how much str to give func,
+             * Store that string on the heap with variables replaced,
+             * Pass the string to the func
+             */
             i++;
             status = tools.func[ECHO](buffer + words[i]);
             if (status) {
