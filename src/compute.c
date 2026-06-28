@@ -1,5 +1,28 @@
 #include "compute.h"
 
+typedef struct {
+    double *elements;
+    int length;
+    int capacity;
+} VecDouble;
+
+typedef struct {
+    float *elements;
+    int length;
+    int capacity;
+} VecFloat;
+
+typedef struct {
+    long long *elements;
+    int length;
+    int capacity;
+} VecInt;
+
+typedef struct {
+    VecDouble matrix;
+    int shape;
+} MtxDouble;
+
 // #include <gsl/gsl_fit.h>
 // #include <gsl/gsl_multifit_nlinear.h>
 

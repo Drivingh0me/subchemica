@@ -77,7 +77,6 @@ int get_short_flag(char c)
     }
 }
 
-/* Not implemented */
 int get_long_flag(char *c)
 {
     if (exact_command(c, "--silent")) {
@@ -216,6 +215,5 @@ int run_app(int argc, char **argv, SystemInfo *sysInfo)
 
 void app_shutdown(SystemInfo *sysInfo)
 {
-    /* Free all memory and files */
     cleanup();
 }
