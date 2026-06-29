@@ -66,6 +66,11 @@ static int interpreter_parse(char* buffer, Toolset tools)
         i++;
     }
 
+    /* Need to find a way to determine tool calls/keywords in
+     * buffer and make a vec of those to hand to tool callback to 
+     * prevent double calls and allow nested calls.
+     */
+
     /* Call tools from words */
     i = 0;
     while (i < word_index) {

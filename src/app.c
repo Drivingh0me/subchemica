@@ -49,7 +49,8 @@ static void cleanup()
     // printf("Cleaning up.\n");
 }
 
-void print_response(*char str) {
+void print_response(char *str)
+{
     printf(GREEN "> " RESET "%s", str);
 }
 
