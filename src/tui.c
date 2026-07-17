@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 
+/* Temporary */
+#include <termios.h>
+
 void run_tui(Toolset tools)
 {
     int termRows;
@@ -17,6 +20,13 @@ void run_tui(Toolset tools)
     int waste;
 
     printf(ALT_SCREEN);
+
+    /* Pull into function and targ */
+    struct termios orig;
+    struct termios raw;
+    tcgetattr(STDIN_FILENO, orig);
+    raw = orig;
+    raw.c_lflag &= ~(ECHO | ICANON);
     /* Vim-like with ':' to start a command */
     while (tuiShouldRun) {
         TARG_get_term_size(&termRows, &termCols);
