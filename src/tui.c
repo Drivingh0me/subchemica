@@ -16,23 +16,11 @@ void run_tui(Toolset tools)
     char *a;
     int waste;
 
+    printf(ALT_SCREEN);
     /* Vim-like with ':' to start a command */
     while (tuiShouldRun) {
         TARG_get_term_size(&termRows, &termCols);
-        printf(CLEAR CURSOR_HOME);
-        printxt(INT_NEWLN, 11);
 
-        a = fgets(buffer, sizeof(buffer), stdin);
-        if (a != buffer) {
-            tuiShouldRun = 0;
-        }
-
-        if (exact_command(buffer, "quit\n")) {
-            tuiShouldRun = 0;
-        }
-
-        if (exact_command(buffer, "clear\n")) {
-            printf(CLEAR CURSOR_HOME);
-        }
     }
+    printf(NORM_SCREEN);
 }
