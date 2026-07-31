@@ -168,8 +168,8 @@ int execute_args(ArgParse args, char **argv)
                 break;
             case 3:
                 /* TUI */
-                status = run_tui(tools);
-                if (status) {goto Cleanup;}
+                run_tui(tools);
+                // if (status) {goto Cleanup;}
                 break;
             case 4:
                 /* Interpreter */
