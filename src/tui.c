@@ -21,6 +21,7 @@ void run_tui(Toolset tools)
     int err;
 
     printf(ALT_SCREEN);
+    fflush(stdout);
 
     /* Pull into function and targ */
     struct termios orig;
@@ -36,11 +37,14 @@ void run_tui(Toolset tools)
     while (tuiShouldRun) {
         TARG_get_term_size(&termRows, &termCols);
         printf(CLEAR);
+        fflush(stdout);
+        printf(CURSOR_HOME);
+        printf("%c", c);
+        fflush(stdout);
         err = read(STDIN_FILENO, &c, 1);
         if (err != 1 || c == 'q') {
             tuiShouldRun = 0;
         }
-        printf("%c", c);
 
 
     }
