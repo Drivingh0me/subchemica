@@ -18,19 +18,22 @@ typedef struct {
     char *buffer;
 } Screen;
 
-typedef struct {
-    int rows;
-    int cols;
-} TermSize;
-
 int tui_engine(char c, Screen *screen, TermSize term)
 {
-    screen->length = term.rows * term.cols;
+    int format_chars = 25;
+    screen->length = term.rows * term.cols + format_chars;
     screen->buffer = malloc(screen->length * sizeof(char));
     if (screen->buffer == 0) {
-        return 1;
+        return -1;
     }
     screen->capacity = screen->length;
+
+    for (int i = 0; i < term.rows; i++) {
+        /* append color to buffer */
+        /* Append row */
+        /* clear formatting for next row */
+    }
+
     screen->buffer[0] = c;
     screen->buffer[1] = c + 1;
     screen->buffer[2] = 0;
@@ -39,15 +42,13 @@ int tui_engine(char c, Screen *screen, TermSize term)
 
 void run_tui(Toolset tools)
 {
-    // int termRows;
-    // int termCols;
     TermSize termsize;
     int tuiShouldRun = 1;
     Screen screen;
     char c;
     int err;
 
-    c = ' ';
+    c = 0;
 
     printf(ALT_SCREEN);
     fflush(stdout);
@@ -64,17 +65,24 @@ void run_tui(Toolset tools)
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
     /* Vim-like with ':' to start a command */
     while (tuiShouldRun) {
-        TARG_get_term_size(&termsize.rows, &termsize.cols);
+        TARG_get_term_size(&termsize);
         printf(CLEAR);
         printf(CURSOR_HOME);
 
         err = tui_engine(c, &screen, termsize);
+        if (err != 0) {
+            tuiShouldRun = 0;
+            goto tui_engine_err;
+        }
+
         printf(screen.buffer);
         fflush(stdout);
         err = read(STDIN_FILENO, &c, 1);
-        if (err != 1 || c == 'q') {
+        if (err != 1 || c == 27) {
             tuiShouldRun = 0;
         }
+
+    tui_engine_err:
         free(screen.buffer);
         screen.buffer = NULL;
     }
