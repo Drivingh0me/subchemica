@@ -18,9 +18,26 @@ typedef struct {
     char *buffer;
 } Screen;
 
+void append_char(char c, char *buffer, int *index)
+{
+    buffer[*index] = c;
+    (*index)++;
+}
+
+void append_string(char *s, char *buffer, int *index)
+{
+    int i = 0;
+    while (s[i] != 0) {
+        append_char(s[i], buffer, index);
+        i++;
+    }
+}
+
 int tui_engine(char c, Screen *screen, TermSize term)
 {
     int format_chars = 25;
+    int buffer_index = 0;
+
     screen->length = term.rows * term.cols + format_chars;
     screen->buffer = malloc(screen->length * sizeof(char));
     if (screen->buffer == 0) {
@@ -29,14 +46,19 @@ int tui_engine(char c, Screen *screen, TermSize term)
     screen->capacity = screen->length;
 
     for (int i = 0; i < term.rows; i++) {
-        /* append color to buffer */
-        /* Append row */
-        /* clear formatting for next row */
+        if (i == term.rows - 1) {
+            append_string(RED, screen->buffer, &buffer_index);
+        }
+        for (int j = 0; j < term.cols; j++) {
+            append_char(c, screen->buffer, &buffer_index);
+        }
+        if (i == term.rows - 1) {
+            append_string(RESET, screen->buffer, &buffer_index);
+        }
     }
+    screen->buffer[buffer_index] = 0;
+    buffer_index++;
 
-    screen->buffer[0] = c;
-    screen->buffer[1] = c + 1;
-    screen->buffer[2] = 0;
     return 0;
 }
 
