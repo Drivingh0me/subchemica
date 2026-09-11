@@ -72,8 +72,7 @@ static int interpreter_parse(char* buffer, Toolset tools)
      * buffer and make a vec of those to hand to tool callback to 
      * prevent double calls and allow nested calls.
      */
-    /* Need vector of variables like a key value pair to fecth the values
-     * to plug in
+    /* Add hash function and key value lookup.
      */
     /* command buffer contains all of the null terminated strings
      * to pass to all of the function callbacks with variables
