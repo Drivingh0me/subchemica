@@ -1,3 +1,8 @@
+/* TODO:
+    Could wrap all Vec with 64 bit type into a union with identifier
+    to for a generic Vec type?
+*/
+
 #include "compute.h"
 
 typedef struct {
@@ -22,6 +27,19 @@ typedef struct {
     VecDouble matrix;
     int shape;
 } MtxDouble;
+
+/* Prints a VecDouble in scientific notation */
+int print_vec(VecDouble v) {
+    int i = 0;
+    for (i < v.length; i++) {
+        printf("%E", v.elements[i]);
+    return 0;
+}
+
+/* Append a single value onto a VecDouble. */
+int append_VecDouble(VecDouble v, double d) {
+
+}
 
 // #include <gsl/gsl_fit.h>
 // #include <gsl/gsl_multifit_nlinear.h>
