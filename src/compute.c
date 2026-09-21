@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "compute.h"
 
 typedef struct {
@@ -32,9 +35,9 @@ typedef struct {
 
 /* Prints a VecDouble in scientific notation */
 int print_vec(VecDouble v) {
-    int i = 0;
-    for (i < v.size; i++) {
+    for (int i = 0; i < v.size; i++) {
         printf("%E", v.elements[i]);
+    }
     return 0;
 }
 
