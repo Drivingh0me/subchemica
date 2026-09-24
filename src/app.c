@@ -24,6 +24,8 @@ typedef struct {
 #define ARG_MAX 64
 #define VERSION "subchemica v0.1.1 (pre-alpha)\n"
 
+/* TODO: Add passing a normal string to the app from pipe */
+
 /* argsparse
  * The flags array is an int of each flag given in order.
  * The args array is the start then end index of argv given to each flag
